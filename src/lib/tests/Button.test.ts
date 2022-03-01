@@ -1,6 +1,10 @@
-import { render, fireEvent } from '@testing-library/svelte';
+import { beforeEach, describe, test, expect, vi } from 'vitest';
+import { cleanup, render, fireEvent } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
+
 import Button from '../components/Button.svelte';
+
+beforeEach(cleanup);
 
 /*Exporting is required. Access to exported methods is going from rendered component*/
 //Testing exported methods
@@ -40,14 +44,14 @@ describe('Testing exported prop:', () => {
 	});
 });
 
-/* Emitting events using Jest's mock and Client-side component API (component.$on) */
+/* Emitting events using vi's mock and Client-side component API (component.$on) */
 //Testing emitted custom events with fireEvent method
 
 describe('Testing emitted custom events fireEvent method:', () => {
 	test('it emits an event', async () => {
 		const { getByText, component } = render(Button);
 		const button = getByText(/Clicks:/);
-		let mockEvent = jest.fn();
+		let mockEvent = vi.fn();
 		component.$on('countChanged', (event) => mockEvent(event.detail));
 		await fireEvent.click(button);
 
@@ -68,7 +72,7 @@ describe('Testing emitted custom events user-events library:', () => {
 	test('it emits an event', async () => {
 		const { getByText, component } = render(Button);
 		const button = getByText(/Clicks:/);
-		let mockEvent = jest.fn();
+		let mockEvent = vi.fn();
 		component.$on('countChanged', (event) => mockEvent(event.detail));
 		await userEvent.click(button);
 		expect(mockEvent).toHaveBeenCalled();
